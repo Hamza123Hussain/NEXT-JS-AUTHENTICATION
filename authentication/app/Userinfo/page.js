@@ -1,24 +1,27 @@
-"use client"
-import { signOut, useSession } from 'next-auth/react'
-import React from 'react'
+"use client";
 
-const page = () => {
+import { signOut } from "next-auth/react";
+import { useSession } from "next-auth/react";
 
-const {data:session}=useSession()
-
-
+export default function UserInfo() {
+  const { data: session } = useSession();
+console.log(session)
   return (
-
-    <div class="flex items-center justify-center h-screen bg-gradient-to-br from-indigo-500 to-indigo-800">
-       <div class="bg-white font-semibold text-center rounded-3xl border shadow-lg p-10 max-w-xs">
-
-         <h1 class="text-lg text-gray-700"> Name : {session?.user?.Name} </h1>
-         <h3 class="text-sm text-gray-400 "> Email : {session?.user?.Email} </h3>
-
-         <button onClick={()=>signOut()} class="bg-red-600 px-8 py-2 mt-8 rounded-3xl text-gray-100 font-semibold uppercase tracking-wide">Log Out</button>
-       </div>
-     </div>
-  )
+    <div className="grid place-items-center h-screen">
+      <div className="shadow-lg p-8 bg-zince-300/10 flex flex-col gap-2 my-6">
+        <div>
+          Name: <span className="font-bold">{session?.user?.Name}</span>
+        </div>
+        <div>
+          Email: <span className="font-bold">{session?.user?.Email}</span>
+        </div>
+        <button
+          onClick={() => signOut()}
+          className="bg-red-500 text-white font-bold px-6 py-2 mt-3"
+        >
+          Log Out
+        </button>
+      </div>
+    </div>
+  );
 }
-
-export default page

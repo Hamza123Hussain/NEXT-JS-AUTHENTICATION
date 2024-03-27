@@ -8,6 +8,12 @@ export async function POST(request) {
         const { Name, Email, Password } = await request.json();
         const hashedPassword = await bcrypt.hash(Password, 10); // Use 10 as the number of salt rounds
         await MongoConnect();
+
+        
+
+
+
+
         await Usermodel.create({ Name, Email, Password: hashedPassword }); // Store the hashed password in the database
 
         return NextResponse.json({

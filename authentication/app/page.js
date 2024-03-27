@@ -13,26 +13,28 @@ const handlechange=(e)=>{
   }))
 }
 
-const handlesubmit=async(e)=>{
-  e.preventDefault()
+const handlesubmit = async (e) => {
   const {Email,Password}=formdata
-  try {
-    const res= await signIn('credentials',{
-Email,Password,redirect:false
-    })
+  e.preventDefault();
 
-    if(res.error){
-      seterror('PASSWORD OR EMAIL INCORRECT')
-    return;
+    try {
+      const res = await signIn("credentials", {
+        Email,
+        Password,
+        redirect: false,
+      });
+
+      if (res.error) {
+        seterror("Invalid Credentials");
+        return;
+      }
+
+      router.replace("Userinfo");
+    } catch (error) {
+      console.log(error);
     }
+};
 
-    router.push('/Userinfo')
-
-
-  } catch (error) {
-    
-  }
-}
 
   return (
     <div className="bg-black text-white flex min-h-screen flex-col items-center pt-16 sm:justify-center sm:pt-0">

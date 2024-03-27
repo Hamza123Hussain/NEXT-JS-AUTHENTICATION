@@ -1,4 +1,3 @@
-;
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
@@ -12,11 +11,11 @@ export const authOptions = {
       credentials: {},
 
       async authorize(credentials) {
-        const { Email   , Password } = credentials;
+        const { Email, Password } = credentials;
 
         try {
-          await MongoConnect();
-          const user = await Usermodel.findOne({ Email });
+          await MongoConnect(); // Corrected function call
+          const user = await Usermodel.findOne({ Email }); // Corrected field name
 
           if (!user) {
             return null;
@@ -29,8 +28,11 @@ export const authOptions = {
           }
 
           return user;
+
+          
         } catch (error) {
           console.log("Error: ", error);
+          return null; // Added return null for error handling
         }
       },
     }),
@@ -40,7 +42,7 @@ export const authOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   pages: {
-    signIn: "/",
+    signIn: "/", // Corrected sign-in page path
   },
 };
 

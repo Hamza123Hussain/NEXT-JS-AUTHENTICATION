@@ -8,47 +8,69 @@ const [error,seterror]=useState(false)
 const [errotext,seterrortext]=useState("")
 const router= useRouter()
 const handlechange=(e)=>{
+
+  // the User shall not be able to visit the registeration or login page if the user is in the dashboard
+//   const session= await getServerSession(authOptions);
+
+// if(session) redirect ('/Userinfo')
+
+
+
   setformdata((data)=>({
     ...data,[e.target.name]:e.target.value
   }))
 }
-const Handlesubmit=async(e)=>{
-  e.preventDefault()
-  try {
-    const {Name,Email,Password}=formdata
-    if(Name==""||Email==""||Password==""){
-      seterrortext('ALL FIELDS ARE TO BE FILLED')
-      seterror(true)
-    }
-
-const exisitinguser=await fetch('/api/UserExists',{
-  method:'POST',
-  body:JSON.stringify({Email})
-})
-
-const {user}= exisitinguser.json()
-if(use){
-  seterror(true)
-  seterrortext('USER EXISTS')
-  return;
-}
 
 
-    const resposne= await fetch('/api/Register',{
-      method:'POST',
-      body:JSON.stringify({Name,Email,Password})
-    })
-    
-    if(resposne.ok){
-      alert('USER HAS BEEN CREATED')
-      setformdata({Name:"",Email:"",Password:""})
-      router.push('/')
-    }
-    
-  } catch (error) {
-    alert('user not created')
+
+const Handlesubmit = async (e) => {
+  e.preventDefault();
+  const {Name,Email,Password}=formdata
+  if (!Name || !Email || !Password) {
+    seterrortext("All fields are necessary.");
+    return;
   }
-}
+
+  try {
+    const resUserExists = await fetch("api/UserExists", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ Email }),
+    });
+
+    const { user } = await resUserExists.json();
+
+    if (user) {
+      seterrortext("User already exists.");
+      return;
+    }
+
+    const res = await fetch("api/Register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        Name,
+        Email,
+        Password,
+      }),
+    });
+
+    if (res.ok) {
+      const form = e.target;
+      form.reset();
+      router.push("/");
+    } else {
+      console.log("User registration failed.");
+    }
+  } catch (error) {
+    console.log("Error during registration: ", error);
+  }
+};
+
 console.log(process.env.MongoURL)
 
   return (
